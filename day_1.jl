@@ -36,9 +36,46 @@ function max_elf(input)
 end;
 
 ex = max_elf(example)
-println("Example gives:", ex)
+println("Example gives: ", ex)
 
-line=readline(stdin)
-answer = max_elf(line)
-print("My problem gives:", answer)
+problem_input=read(stdin)
+answer = max_elf(problem_input)
+println("Part 1 answer: ", answer)
+
+function top_3_elfs(input)
+    au = -1 # Gold
+    ag = -1 # Silver
+    cu = -1 # Bronze
+    elf = 0
+    for line in eachline(IOBuffer(input))
+        val = tryparse(Int64, line)
+        if typeof(val) == Int64
+            elf += val
+        else
+            if elf>cu
+                cu = elf
+            end
+            if cu>ag
+                cu, ag = ag, cu
+            end
+            if ag>au
+                au, ag = ag, au
+            end
+            elf = 0
+        end
+    end
+            if elf>cu
+                cu = elf
+            end
+            if cu>ag
+                cu, ag = ag, cu
+            end
+            if ag>au
+                au, ag = ag, au
+            end
+    return au, ag, cu
+end;
+
+answer = top_3_elfs(problem_input)
+println("Part 2 answer: ", answer, " Total: ", sum(answer))
 end;
