@@ -17,7 +17,7 @@ function main()
     println("Part 1 answer: ", answer)
 
     answer = trios_score(problem_input)
-    println("Part 1 answer: ", answer)
+    println("Part 2 answer: ", answer)
 end
 
 function compartments_score(input)
