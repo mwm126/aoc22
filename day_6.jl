@@ -30,10 +30,9 @@ end
 function first_uniq_14(s)
     N = length(s)
     for n in 14:N
-        uniq = true
-        char14 = s[n-13:n]
-        chars = [char for char in char14]
-        charset = Set(chars)
+        substring = s[n-13:n]
+        charlist = [char for char in substring]
+        charset = Set(charlist)
         if length(charset) == 14
             return n
         end
