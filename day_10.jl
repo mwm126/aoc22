@@ -9,12 +9,16 @@ function main()
     @assert 3960 == signals[220]
     @assert 13140 == sigsum(signals)
 
+    @assert example_image == render_image(example)
+
     problem_input = read(stdin)
 
     signals = find_signals(problem_input)
     answer = sigsum(signals)
-    println("Part 1 answer: ", answer)
+    println("Part 1 answer:\n", answer)
 
+    answer = render_image(problem_input)
+    println("Part 2 answer:\n", answer)
 end
 
 function sigsum(signals)
@@ -22,6 +26,11 @@ function sigsum(signals)
 end
 
 function find_signals(input)
+    registers = find_registers(input)
+    [cycle * regval for (cycle, regval) in enumerate(registers)]
+end
+
+function find_registers(input)
     Vs = []
     for line in eachline(IOBuffer(input))
         V = 0
@@ -35,22 +44,40 @@ function find_signals(input)
     end
     register = 1
     registers = []
-    for (cycle, V) in enumerate(Vs)
+    for (cycle, _) in enumerate(Vs)
         if 2 < cycle
             register += Vs[cycle-1]
         end
         push!(registers, register)
-        println("cycle: ", cycle, "   V:  ", V, "       register: ", register, "   signal: ", cycle*register)
     end
-    signals = [cycle * regval for (cycle, regval) in enumerate(registers)]
-    signals
+    registers
 end
 
-simple_example = """
-noop
-addx 3
-addx -5
-"""
+function render_image(input)
+    s = ""
+    registers = find_registers(input)
+    for row in 0:5
+        for row_cycle in 0:39
+            sprite = registers[1 + row_cycle+40*row]
+            if abs(sprite - row_cycle) < 2
+                s *= "#"
+            else
+                s *= "."
+            end
+        end
+        s *= "\n"
+    end
+    s
+end
+
+example_image = """
+  ##..##..##..##..##..##..##..##..##..##..
+  ###...###...###...###...###...###...###.
+  ####....####....####....####....####....
+  #####.....#####.....#####.....#####.....
+  ######......######......######......####
+  #######.......#######.......#######.....
+  """
 
 example = raw"""
 addx 15
