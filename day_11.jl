@@ -22,6 +22,11 @@ function main()
 
     answer = monkey_business(problem_input)
     println("Part 1 answer:\n", answer)
+
+    @assert 2713310158 == monkey_business_10k(example)
+
+    answer = monkey_business_10k(problem_input)
+    println("Part 2 answer:\n", answer)
 end
 
 function monkey_business(input)
@@ -29,13 +34,28 @@ function monkey_business(input)
     for _ in 1:20
         monkey_with_items(monkeys)
     end
-    counts = [m.inspection_count for m in monkeys]
-    sort!(counts)
-    monk, monk2 = last(counts, 2)
-    monk*monk2
+    monk, monk2 = last(sort([m.inspection_count for m in monkeys]), 2)
+    monk * monk2
 end
 
-function monkey_with_items(monkeys)
+function monkey_business_10k(input)
+    monkeys = parse_monkeys(input)
+    for i in 1:10000
+        monkey_with_items(monkeys, false)
+        if i in (1,20, 1000, 2000,3000,4000,5000,6000,7000,8000,9000,10000)
+            for (ii, monkey) in enumerate(monkeys)
+                println(i, " Monkey ",ii," inspected items ",monkey.inspection_count," times.")
+            end
+            println()
+        end
+    end
+    monk, monk2 = last(sort([m.inspection_count for m in monkeys]), 2)
+    monk * monk2
+end
+
+
+function monkey_with_items(monkeys, lower_worry=true)
+    lcm_test = reduce(*, [m.test for m in monkeys])
     for monkey in monkeys
         while !isempty(monkey.items)
             monkey.inspection_count += 1
@@ -43,7 +63,11 @@ function monkey_with_items(monkeys)
             # println("monkey inspects with worry level ", old)
             item = eval(monkey.operation)
             # println("worry level now ", item)
-            item ÷= 3
+            if lower_worry
+                item ÷= 3
+            else
+                item %= lcm_test
+            end
             # println("bored monkey; worry level now ", item)
             next_monkey = (0 == item % monkey.test) ? monkey.true_throw : monkey.false_throw
             # println("throw to monkey ", next_monkey)
