@@ -25,7 +25,19 @@ function ordered_sum(input)
 end
 
 function sort_packets(packets)
+    bubblesort(packets, 1, length(packets))
     packets
+end
+
+function bubblesort(A, lo, hi)
+    for i in 1:length(A)
+        for j in 1:(length(A)-i)
+            result = ordered(A[j], A[j+1])
+            if result == 1
+                A[j], A[j+1] = A[j+1], A[j]
+            end
+        end
+    end
 end
 
 function decoder_key(input)
@@ -34,7 +46,6 @@ function decoder_key(input)
     index_1 = -1
     index_2 = -1
     for (ii, packet) in enumerate(packets)
-        # println(ii, " ", packet, typeof(packet), " ", [[2]], " ", typeof([[2]]), "???", packet == [[2]])
         if packet == [[2]]
             index_1 = ii
         end
@@ -42,8 +53,6 @@ function decoder_key(input)
             index_2 = ii
         end
     end
-    println("index 1: ", index_1)
-    println("index 2: ", index_2)
     index_1*index_2
 end
 
@@ -104,9 +113,6 @@ end
 function parse_line(line)
     eval(Meta.parse(line))
 end
-
-@assert -1 == ordered(parse_line("[1,1,3,1,1]"), parse_line("[1,1,5,1,1]"))
-@assert -1 == ordered(parse_line("[[1],[2,3,4]]"), parse_line("[[1],4]"))
 
 example = raw"""
 [1,1,3,1,1]
