@@ -24,16 +24,10 @@ function ordered_sum(input)
     pairsum
 end
 
-function sort_packets(packets)
-    bubblesort(packets, 1, length(packets))
-    packets
-end
-
 function bubblesort(A, lo, hi)
     for i in 1:length(A)
         for j in 1:(length(A)-i)
-            result = ordered(A[j], A[j+1])
-            if result == 1
+            if 1 == ordered(A[j], A[j+1])
                 A[j], A[j+1] = A[j+1], A[j]
             end
         end
@@ -42,7 +36,7 @@ end
 
 function decoder_key(input)
     packets = parse_all(input)
-    packets = sort_packets(packets)
+    bubblesort(packets, 1, length(packets))
     index_1 = -1
     index_2 = -1
     for (ii, packet) in enumerate(packets)
@@ -84,7 +78,6 @@ function ordered(left, right)
         return length(left)==length(right) ? 0 : length(left)<length(right) ? -1 : +1
     end
 end
-
 
 function parse_pairs(input)
     pairs = []
