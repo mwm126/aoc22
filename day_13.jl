@@ -1,10 +1,15 @@
 function main()
     @assert 13 == ordered_sum(example)
 
+    @assert 140 == decoder_key(example)
+
     problem_input = read(stdin)
 
     answer = ordered_sum(problem_input)
     println("Part 1 answer: ", answer)
+
+    answer = decoder_key(problem_input)
+    println("Part 2 answer: ", answer)
 end
 
 function ordered_sum(input)
@@ -19,8 +24,41 @@ function ordered_sum(input)
     pairsum
 end
 
+function sort_packets(packets)
+    packets
+end
+
+function decoder_key(input)
+    packets = parse_all(input)
+    packets = sort_packets(packets)
+    index_1 = -1
+    index_2 = -1
+    for (ii, packet) in enumerate(packets)
+        # println(ii, " ", packet, typeof(packet), " ", [[2]], " ", typeof([[2]]), "???", packet == [[2]])
+        if packet == [[2]]
+            index_1 = ii
+        end
+        if packet == [[6]]
+            index_2 = ii
+        end
+    end
+    println("index 1: ", index_1)
+    println("index 2: ", index_2)
+    index_1*index_2
+end
+
+function parse_all(input)
+    packets :: Vector{Any} = [parse_line("[[2]]"), parse_line("[[6]]")]
+    pairs = parse_pairs(input)
+    for pair in pairs
+        left, right = pair
+        push!(packets, left)
+        push!(packets, right)
+    end
+    packets
+end
+
 function ordered(left, right)
-    # println("comparing ", left, ":", typeof(left), " and ", right, " : ", typeof(right))
     if typeof(left) == Int && typeof(right) == Int
         return left==right ? 0 : left<right ? -1 : +1
     elseif typeof(left) == Int
@@ -37,6 +75,7 @@ function ordered(left, right)
         return length(left)==length(right) ? 0 : length(left)<length(right) ? -1 : +1
     end
 end
+
 
 function parse_pairs(input)
     pairs = []
